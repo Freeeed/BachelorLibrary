@@ -5,43 +5,43 @@ import bachelor_library.Gestures.Gesture;
 
 public class StringConverter {
 
-    private static final String LIST_SEPERATOR = ";";
-    private static final String DATA_SEPERATOR = "-";
+    private static final String LIST_SEPARATOR = ";";
+    private static final String DATA_SEPARATOR = ":";
 
 
     public String convertFromGesture(Gesture gesture) {
         String output = "";
 
         for (Acceleration acceleration : gesture.getData()) {
-            output+= convertFromAcceleration(acceleration) + LIST_SEPERATOR;
+            output += convertFromAcceleration(acceleration) + LIST_SEPARATOR;
         }
 
         // letzten Separator entfernen
-        return output.substring(0, output.length() - (1 + LIST_SEPERATOR.length()));
+        return output.substring(0, output.length() - LIST_SEPARATOR.length());
     }
 
     public String convertFromAcceleration(Acceleration acceleration) {
-        return acceleration.x + DATA_SEPERATOR + acceleration.y + DATA_SEPERATOR + acceleration.time;
+        return acceleration.x + DATA_SEPARATOR + acceleration.y + DATA_SEPARATOR + acceleration.time;
     }
 
-    public Gesture convertToGesture(String gestureString) {
+    public Gesture convertToGesture(String gestureString) throws Exception {
 
-        String[] data = gestureString.split(LIST_SEPERATOR);
+        String[] data = gestureString.split(LIST_SEPARATOR);
 
         Gesture gesture = new Gesture();
 
-        for(String accelerationString : data) {
+        for (String accelerationString : data) {
             gesture.add(convertToAcceleration(accelerationString));
         }
 
         return gesture;
     }
 
-    public Acceleration convertToAcceleration(String acceleration) throws IllegalArgumentException {
-        String[] data = acceleration.split(DATA_SEPERATOR);
+    public Acceleration convertToAcceleration(String acceleration) throws Exception {
+        String[] data = acceleration.split(DATA_SEPARATOR);
 
-        if(data.length != 3) {
-            throw new IllegalArgumentException("Invalid number of data items!");
+        if (data.length != 3) {
+            throw new Exception("Invalid number of data items!");
         }
 
         Float x = Float.parseFloat(data[0]);
