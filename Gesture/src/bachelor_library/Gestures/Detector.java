@@ -67,7 +67,7 @@ public class Detector implements GeneratorListenerInterface {
         Acceleration currentAcceleration;
 
         if(useFilter) {
-            float dT = (originalAcceleration.time - smoothedAcceleration.time) / 1000; // ms in s umrechnen
+            float dT = (float) (originalAcceleration.time - smoothedAcceleration.time) / 1000; // ms in s umrechnen
 
             float RC = 0.01333f; // Konstante für RC
 
