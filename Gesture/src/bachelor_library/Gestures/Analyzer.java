@@ -12,6 +12,11 @@ import java.util.ArrayList;
  */
 public class Analyzer {
 
+    /**
+     * latest computationTime in nanoseconds
+     */
+    protected long computationTime;
+
     public Analyzer() {
 
     }
@@ -26,6 +31,8 @@ public class Analyzer {
      */
     public String analyze(Gesture gesture) throws UnknownGesture {
         // find acceleration peeks...
+
+        long startComputationTime = System.nanoTime();
 
         ArrayList<Point> pointListX = new ArrayList<>();
         ArrayList<Point> pointListY = new ArrayList<>();
@@ -49,23 +56,40 @@ public class Analyzer {
         sketcherY.Compute();
         sketcherY.Flatten();
 
+        String gestureName = null;
+
         if (axisIsFlat(sketcherX) &&
                 axisHasExtremePoints(sketcherY) &&
                 secondIsLarger(sketcherY) &&
                 thirdIsLowerAndFurtherAreNoise(sketcherY)) {
 
             // upwards & downwards
-            return startIsMaximum(sketcherY) ? "upwards" : "downwards";
+            gestureName = startIsMaximum(sketcherY) ? "upwards" : "downwards";
         } else if (axisIsFlat(sketcherY) &&
                 axisHasExtremePoints(sketcherX) &&
                 secondIsLarger(sketcherX) &&
                 thirdIsLowerAndFurtherAreNoise(sketcherX)) {
 
             // left & right
-            return startIsMaximum(sketcherX) ? "right" : "left";
+            gestureName = startIsMaximum(sketcherX) ? "right" : "left";
         }
 
-        throw new UnknownGesture();
+        computationTime = System.nanoTime() - startComputationTime;
+
+        if(gestureName == null) {
+            throw new UnknownGesture();
+        }
+
+        return gestureName;
+    }
+
+    /**
+     * Returns the latest computation time in milliseconds
+     *
+     * @return
+     */
+    public long latestComputationTime() {
+        return computationTime / 1000;
     }
 
     /**
